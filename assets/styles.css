@@ -1,0 +1,131 @@
+*, *:before, *:after {
+    box-sizing: border-box;
+}
+html {
+    font-size: 16px;
+}
+body {
+    margin: 2rem;
+    font-family: sans-serif;
+    color: #333132;
+}
+
+section {
+    max-width: 768px;
+    margin: 0 auto 2rem;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+}
+.clue-grid {
+    margin-left: -52px;
+}
+h1 {
+    margin-top: 0;
+    margin-bottom: .25rem;
+    font-size: 1.5rem;
+}
+p {
+    margin-top: 0;
+    margin-bottom: .5rem;
+    font-size: 1rem;
+    line-height: 1.4;
+}
+
+.size ul {
+    display: flex;
+    justify-content: center;
+    list-style-type: none;
+}
+.size li + li {
+    margin-left: 1rem;
+}
+.size label {
+    margin-left: .25rem;
+}
+
+.grid {
+    background-color: #333132;
+    display: grid;
+    justify-content: center;
+    border: 3px solid #333132;
+    grid-gap: 1px;
+}
+.grid > div {
+    background-color: #fff;
+    transition: background-color .05s ease-in-out;
+}
+.grid > div.fill {
+    background-color: #333132;
+    transition: background-color .05s ease-in-out;
+}
+
+.grid.small {
+    width: 260px;
+}
+.small:not(.clue-grid) {
+    grid-template-columns: repeat(5, 50px);
+    grid-template-rows: repeat(5, 50px);
+}
+
+/* set placement of clue-col/row */
+.clue-grid {
+    display: grid;
+}
+.clue-grid.small {
+    width: 312px;
+    grid-template-areas:
+    ". cc1 cc2 cc3 cc4 cc5" "cr1 grid grid grid grid grid" "cr2 grid grid grid grid grid" "cr3 grid grid grid grid grid" "cr4 grid grid grid grid grid" "cr5 grid grid grid grid grid";
+    grid-template-columns: repeat(6, 52px);
+    grid-template-rows: repeat(6, 52px);
+}
+.clue-grid span {
+    font-family: monospace;
+    border: 1px solid transparent;
+}
+.clue-grid span.c {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    padding: .25rem;
+}
+.clue-grid span.r {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: .25rem;
+}
+.cc1 {
+    grid-area: cc1;
+}
+.cc2 {
+    grid-area: cc2;
+}
+.cc3 {
+    grid-area: cc3;
+}
+.cc4 {
+    grid-area: cc4;
+}
+.cc5 {
+    grid-area: cc5;
+}
+.cr1 {
+    grid-area: cr1;
+}
+.cr2 {
+    grid-area: cr2;
+}
+.cr3 {
+    grid-area: cr3;
+}
+.cr4 {
+    grid-area: cr4;
+}
+.cr5 {
+    grid-area: cr5;
+}
+.clue-grid .grid {
+    grid-area: grid;
+}
