@@ -2,101 +2,87 @@
 
 const grid = document.querySelector('#grid .grid');
 const clueGrid = document.querySelector('#clue-grid');
-const small = document.querySelector('#small');
 const generateBtn = document.querySelector('#generate');
 const sizeObj = {
-    "small": 25,
+    "5x5": 25,
+    "6x5": 30,
 };
 
 // add event listeners to all the squares
-grid.addEventListener('click', function(e) {
+grid.addEventListener('click', function (e) {
     const square = e.target;
     square.classList.toggle('fill');
 });
 
 // build out the rules for solving the grid
-generateBtn.addEventListener('click', function(e) {
+generateBtn.addEventListener('click', function (e) {
     clearPuzzle();
-    buildPuzzle('small');
+    // buildPuzzle('5x5');
+    buildPuzzle('6x5');
 
     e.preventDefault();
 });
 
 const generateGrid = function(size) {
-    grid.classList = `grid ${size}`;
+    grid.classList = `grid grid--${size}`;
     grid.innerHTML = '';
     for(var i = 0; i < (sizeObj[size]); i++) {
         grid.innerHTML += '<div></div>';
     }
 }
 
-generateGrid('small');
+generateGrid('6x5');
 
-const buildPuzzle = function(size) {
+const buildPuzzle = function (size) {
+    // build true/false array based on which squares are filled in
     const puzzleArr = Array.from(document.querySelectorAll('#grid .grid div'));
 
-    // determine length of each sub array
-    let arrDepth;
+    // determine first dimension length of row and column
+    let depthArr = size.split('x');
+    let rowDepth = depthArr.shift();
+    let colDepth = depthArr.shift();
 
-    // length of sub array dependent on size
-    if (size === 'small') {
-        arrDepth = 5;
-    } else {
-        console.error('Error: Invalid puzzle size.');
-    }
+    // depth is rowDepth because array is being read from left to right
+    let depth = rowDepth;
 
-    // initialize row/col two dimensional arrays
+    // initialize two dimensional arrays for rows and columns
+    // opposite rowDepth/colDepth are used since
+    // rowArr will have colDepth number of rows
+    // colArr will have rowDepth number of columns
+    // example: you have a 10x5 grid (50 squares)
+    // each row will have 10 squares, and there will be 5 rows
+    // each column will have 5 squares, and there will be 10 columns
     let rowArr = [];
-    let colArr = [];
-    for(let i = 0; i < arrDepth; i++) {
+    for(let i = 0; i < colDepth; i++) {
         rowArr[i] = [];
+    }
+    let colArr = [];
+    for(let i = 0; i < rowDepth; i++) {
         colArr[i] = [];
     }
 
-    let depth;
-    // loop through puzzle array and split it into row/col arrays
+    // builds out the arrays based on rows and columns
     for (let i = 0; i < puzzleArr.length; i++) {
-        // determine first level of array
-        depth = Math.floor(i / arrDepth);
 
-        /*
-        reads if array is filled from top to bottom, left to right
+        // determine static key being filled for each iteration
+        let key = Math.floor(i / depth);
 
-        rowArr is reading the array sequentially (ie, from 0 to 24)
-        colArr is reading vertically, counting by fives (ie, 0-5-10-15-20),
-        then jumping back to the next lowest key (ie, 1-6-11-16-21),
-        then continuing that pattern (ie, 2-7-12-17-22, 3-8-13-18-23, 4-9-14-19-24)
-
-        example of how this works:
-        rowArr[0][0] colArr[0][0], rowArr[1][0] colArr[0][1], rowArr[2][0] colArr[0][2], etc
-
-        row needs to be broken out by its "five squares per row" to check
-        for horizontally adjacent filled in squares to build the clues
-        col needs to also be broken out by its "five squares per col" to
-        check for vertically adjacent filled in squares to build the clues
-         */
-        rowArr[depth][i - (depth * arrDepth)] = puzzleArr[i].classList.contains('fill');
-        colArr[i - (depth * arrDepth)][depth] = puzzleArr[i].classList.contains('fill');
+        // rowArr is being written based on child array first ([0][0], [0][1], [0][2], etc)
+        rowArr[key][i - (key * depth)] = puzzleArr[i].classList.contains('fill');
+        // colArr is being written based on parent array first ([0][0], [1][0], [2][0], etc)
+        colArr[i - (key * depth)][key] = puzzleArr[i].classList.contains('fill');
     }
 
-    // starts creating the html for
+    // creates html for clues
+    let clueHTML = buildClues(rowArr, colArr);
     let gridHTML = '';
 
-    // figure out consecutive squares
-    for (let i = 0; i < rowArr.length; i++) {
-        // build opening span for row
-        gridHTML += `<span class="cr${i + 1} r">` + calculateClues(rowArr, i) + `</span>`;
-    }
 
-    for (let i = 0; i < colArr.length; i++) {
-        // build opening span for col
-        gridHTML += `<span class="cc${i + 1} c">` + calculateClues(colArr, i) + `</span>`;
-    }
 
     // create div for the clue grid
     const clue = document.createElement('div');
-    clue.classList.add('clue-grid');
-    clue.classList.add('small');
+    clue.classList.add('clue');
+    clue.classList.add(`clue--${size}`);
 
     clue.innerHTML = gridHTML;
 
@@ -114,16 +100,30 @@ const buildPuzzle = function(size) {
 };
 
 // empties out the puzzle with clues
-const clearPuzzle = function() {
+const clearPuzzle = function () {
     clueGrid.innerHTML = '';
 }
 
+const buildClues = function (rowArr, colArr) {
+    let html = '';
+
+    for (let i = 0; i < rowArr.length; i++) {
+        html += `<span class="row row--${i + 1}">` + calculateClues(rowArr, i) + `</span>`;
+    }
+
+    for (let i = 0; i < colArr.length; i++) {
+        html += `<span class="col col--${i + 1}">` + calculateClues(colArr, i) + `</span>`;
+    }
+
+    return html;
+}
+
 // calculates the clues one chunk at a time
-const calculateClues = function(rowArr, i) {
+const calculateClues = function (rowArr, i) {
     let html = '';
     let consecutiveSquares = 0;
 
-    // clueArr is clunky... figured out how to get rid of it
+    // clueArr is clunky... figure out how to get rid of it
     let clueArr = [];
     for(let i = 0; i < rowArr.length; i++) {
         clueArr[i] = [];
