@@ -6,7 +6,7 @@ html {
 }
 body {
     margin: 2rem;
-    font-family: sans-serif;
+    font-family: ui-sans-serif, system-ui, -system-ui, -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji";
     color: #333132;
 }
 
@@ -16,9 +16,6 @@ section {
     text-align: center;
     display: flex;
     justify-content: center;
-}
-.clue-grid {
-    margin-left: -52px;
 }
 h1 {
     margin-top: 0;
@@ -30,6 +27,20 @@ p {
     margin-bottom: .5rem;
     font-size: 1rem;
     line-height: 1.4;
+}
+button {
+    border: .25rem solid #333132;
+    border-radius: .125rem;
+    background-color: #fff;
+    color: #333132;
+    padding: .375rem .75rem;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+button:hover,
+button:focus {
+    border-style: dashed;
+    outline: none;
 }
 
 .size ul {
@@ -48,84 +59,105 @@ p {
     background-color: #333132;
     display: grid;
     justify-content: center;
-    border: 3px solid #333132;
-    grid-gap: 1px;
+    border: .25rem solid #333132;
+    border-radius: .125rem;
 }
 .grid > div {
     background-color: #fff;
     transition: background-color .05s ease-in-out;
+    border: .0625rem solid #333132;
 }
 .grid > div.fill {
     background-color: #333132;
-    transition: background-color .05s ease-in-out;
 }
 
-.grid.small {
-    width: 260px;
+.grid--5x5 {
+    width: 15.5rem;
+    grid-template-columns: repeat(5, 3rem);
+    grid-template-rows: repeat(5, 3rem);
 }
-.small:not(.clue-grid) {
-    grid-template-columns: repeat(5, 50px);
-    grid-template-rows: repeat(5, 50px);
+.grid--6x5 {
+    width: 18.5rem;
+    grid-template-columns: repeat(6, 3rem);
+    grid-template-rows: repeat(5, 3rem);
 }
 
-/* set placement of clue-col/row */
-.clue-grid {
+.clue {
     display: grid;
+    font-family: 'JetBrains Mono', monospace;
 }
-.clue-grid.small {
-    width: 312px;
+.clue--5x5 {
     grid-template-areas:
-    ". cc1 cc2 cc3 cc4 cc5" "cr1 grid grid grid grid grid" "cr2 grid grid grid grid grid" "cr3 grid grid grid grid grid" "cr4 grid grid grid grid grid" "cr5 grid grid grid grid grid";
-    grid-template-columns: repeat(6, 52px);
-    grid-template-rows: repeat(6, 52px);
+        ". . c1 c2 c3 c4 c5 ."
+        ". grid grid grid grid grid grid grid"
+        "r1 grid grid grid grid grid grid grid"
+        "r2 grid grid grid grid grid grid grid"
+        "r3 grid grid grid grid grid grid grid"
+        "r4 grid grid grid grid grid grid grid"
+        "r5 grid grid grid grid grid grid grid"
+        ". grid grid grid grid grid grid grid";
+    grid-template-columns: auto .25rem repeat(5, 3rem) .25rem;
+    grid-template-rows: auto .25rem repeat(5, 3rem) .25rem;
 }
-.clue-grid span {
-    font-family: monospace;
-    border: 1px solid transparent;
+.clue--6x5 {
+    grid-template-areas:
+        ". . c1 c2 c3 c4 c5 c6 ."
+        ". grid grid grid grid grid grid grid grid"
+        "r1 grid grid grid grid grid grid grid grid"
+        "r2 grid grid grid grid grid grid grid grid"
+        "r3 grid grid grid grid grid grid grid grid"
+        "r4 grid grid grid grid grid grid grid grid"
+        "r5 grid grid grid grid grid grid grid grid"
+        ". grid grid grid grid grid grid grid grid";
+    grid-template-columns: auto .25rem repeat(6, 3rem) .25rem;
+    grid-template-rows: auto .25rem repeat(5, 3rem) .25rem;
 }
-.clue-grid span.c {
+.clue span.col,
+.clue span.row {
     display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: .25rem;
+}
+.clue span.col {
     flex-direction: column;
-    justify-content: flex-end;
-    align-items: center;
-    padding: .25rem;
 }
-.clue-grid span.r {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    padding: .25rem;
+.clue span.row > span {
+    padding: 0 .25rem;
 }
-.cc1 {
-    grid-area: cc1;
-}
-.cc2 {
-    grid-area: cc2;
-}
-.cc3 {
-    grid-area: cc3;
-}
-.cc4 {
-    grid-area: cc4;
-}
-.cc5 {
-    grid-area: cc5;
-}
-.cr1 {
-    grid-area: cr1;
-}
-.cr2 {
-    grid-area: cr2;
-}
-.cr3 {
-    grid-area: cr3;
-}
-.cr4 {
-    grid-area: cr4;
-}
-.cr5 {
-    grid-area: cr5;
-}
-.clue-grid .grid {
+.clue .grid {
     grid-area: grid;
+}
+.col--1 {
+    grid-area: c1;
+}
+.col--2 {
+    grid-area: c2;
+}
+.col--3 {
+    grid-area: c3;
+}
+.col--4 {
+    grid-area: c4;
+}
+.col--5 {
+    grid-area: c5;
+}
+.col--6 {
+    grid-area: c6
+}
+.row--1 {
+    grid-area: r1;
+}
+.row--2 {
+    grid-area: r2;
+}
+.row--3 {
+    grid-area: r3;
+}
+.row--4 {
+    grid-area: r4;
+}
+.row--5 {
+    grid-area: r5;
 }
