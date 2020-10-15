@@ -1,12 +1,6 @@
 /* eslint-disable*/
 
 const grid = document.querySelector('#grid .grid');
-const clueGrid = document.querySelector('#clue-grid');
-const generateBtn = document.querySelector('#generate');
-const sizeObj = {
-    "5x5": 25,
-    "6x5": 30,
-};
 
 // add event listeners to all the squares
 grid.addEventListener('click', function (e) {
@@ -15,23 +9,33 @@ grid.addEventListener('click', function (e) {
 });
 
 // build out the rules for solving the grid
-generateBtn.addEventListener('click', function (e) {
+document.querySelector('#generate').addEventListener('click', function (e) {
     clearPuzzle();
-    // buildPuzzle('5x5');
-    buildPuzzle('6x5');
+
+    // figure out a better solution to get the grid size
+    buildPuzzle(grid.classList[1]);
 
     e.preventDefault();
 });
 
 const generateGrid = function(size) {
-    grid.classList = `grid grid--${size}`;
+    // determine first dimension length of row and column
+    let depthArr = size.split('x');
+    let rowDepth = parseInt(depthArr.shift());
+    let colDepth = parseInt(depthArr.shift());
+
     grid.innerHTML = '';
-    for(var i = 0; i < (sizeObj[size]); i++) {
+    grid.class = 'grid';
+    grid.classList.add(size);
+    grid.style.width = `${rowDepth * 3 + .5}rem`;
+    grid.style.gridTemplateColumns = `repeat(${rowDepth}, 3rem)`;
+    grid.style.gridTemplateRows = `repeat(${colDepth}, 3rem)`;
+    for(var i = 0; i < (rowDepth * colDepth); i++) {
         grid.innerHTML += '<div></div>';
     }
 }
 
-generateGrid('6x5');
+generateGrid('7x5');
 
 const buildPuzzle = function (size) {
     // build true/false array based on which squares are filled in
@@ -39,8 +43,8 @@ const buildPuzzle = function (size) {
 
     // determine first dimension length of row and column
     let depthArr = size.split('x');
-    let rowDepth = depthArr.shift();
-    let colDepth = depthArr.shift();
+    let rowDepth = parseInt(depthArr.shift());
+    let colDepth = parseInt(depthArr.shift());
 
     // depth is rowDepth because array is being read from left to right
     let depth = rowDepth;
@@ -63,7 +67,6 @@ const buildPuzzle = function (size) {
 
     // builds out the arrays based on rows and columns
     for (let i = 0; i < puzzleArr.length; i++) {
-
         // determine static key being filled for each iteration
         let key = Math.floor(i / depth);
 
@@ -73,46 +76,50 @@ const buildPuzzle = function (size) {
         colArr[i - (key * depth)][key] = puzzleArr[i].classList.contains('fill');
     }
 
+
+
     // creates html for clues
     let clueHTML = buildClues(rowArr, colArr);
-    let gridHTML = '';
-
-
 
     // create div for the clue grid
     const clue = document.createElement('div');
     clue.classList.add('clue');
-    clue.classList.add(`clue--${size}`);
 
-    clue.innerHTML = gridHTML;
+    // places the clue rows and columns on the grid
 
     // clones the drawn puzzle into the clue puzzle
     var gridClone = grid.cloneNode(true);
     gridClone.removeAttribute('id');
 
-    const gridSec = document.querySelector('#clue-grid section');
-    const gridDiv = document.createElement('div');
+    // set up grid inside clue template
+    gridClone.style.gridColumn = `2 / span ${parseInt(rowDepth) + 2}`;
+    gridClone.style.gridRow = `2 / span ${colDepth + 2}`;
 
+    // set up grid for overall clue template
+    clue.style.gridTemplateColumns = `auto .25rem repeat(${rowDepth}, 3rem) .25rem`;
+    clue.style.gridTemplateRows = `auto .25rem repeat(${colDepth}, 3rem) .25rem`;
+
+    clue.innerHTML = clueHTML;
     clue.appendChild(gridClone);
 
     // add grid to ui
-    clueGrid.appendChild(clue);
+    document.querySelector('#clue-grid').append(clue);
 };
 
 // empties out the puzzle with clues
 const clearPuzzle = function () {
-    clueGrid.innerHTML = '';
+    document.querySelector('#clue-grid').innerHTML = '';
 }
 
 const buildClues = function (rowArr, colArr) {
     let html = '';
 
     for (let i = 0; i < rowArr.length; i++) {
-        html += `<span class="row row--${i + 1}">` + calculateClues(rowArr, i) + `</span>`;
+        html += `<span class="row" style="grid-column: 1; grid-row: ${i + 3};">` + calculateClues(rowArr, i) + `</span>`;
     }
 
     for (let i = 0; i < colArr.length; i++) {
-        html += `<span class="col col--${i + 1}">` + calculateClues(colArr, i) + `</span>`;
+        html += `<span class="col" style="grid-column: ${i + 3}; grid-row: 1;">` + calculateClues(colArr, i) + `</span>`;
     }
 
     return html;
