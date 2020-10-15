@@ -67,9 +67,6 @@ button:hover, button:focus {
   display: grid;
   font-family: "JetBrains Mono", monospace;
 }
-.clue .grid {
-  grid-area: grid;
-}
 .clue span.col,
 .clue span.row {
   display: flex;

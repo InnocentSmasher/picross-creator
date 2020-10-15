@@ -1,0 +1,45 @@
+*, *:before, *:after {
+    box-sizing: border-box;
+}
+html {
+    font-size: 16px;
+}
+body {
+    margin: 2rem;
+    font-family: ui-sans-serif, system-ui, -system-ui, -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji";
+    color: $primary;
+}
+
+section {
+    max-width: 768px;
+    margin: 0 auto 2rem;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+}
+h1 {
+    margin-top: 0;
+    margin-bottom: .25rem;
+    font-size: 1.5rem;
+}
+p {
+    margin-top: 0;
+    margin-bottom: .5rem;
+    font-size: 1rem;
+    line-height: 1.4;
+}
+button {
+    border: .25rem solid $primary;
+    border-radius: .125rem;
+    background-color: $white;
+    color: $primary;
+    padding: .375rem .75rem;
+    text-transform: uppercase;
+    font-weight: 700;
+
+    &:hover,
+    &:focus {
+        border-style: dashed;
+        outline: none;
+    }
+}

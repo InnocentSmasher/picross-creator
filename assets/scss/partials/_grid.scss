@@ -1,0 +1,38 @@
+.grid {
+    background-color: $primary;
+    display: grid;
+    justify-content: center;
+    border: .25rem solid $primary;
+    border-radius: .125rem;
+
+    > div {
+        background-color: $white;
+        transition: background-color .05s ease-in-out;
+        border: .0625rem solid $primary;
+
+        &.fill {
+            background-color: $primary;
+        }
+    }
+}
+
+.clue {
+    display: grid;
+    font-family: 'JetBrains Mono', monospace;
+
+    span.col,
+    span.row {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        padding: .25rem;
+    }
+
+    span.col {
+        flex-direction: column;
+    }
+
+    span.row > span {
+        padding: 0 .25rem;
+    }
+}
