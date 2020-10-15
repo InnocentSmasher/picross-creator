@@ -8,8 +8,19 @@ grid.addEventListener('click', function (e) {
     square.classList.toggle('fill');
 });
 
-// build out the rules for solving the grid
-document.querySelector('#generate').addEventListener('click', function (e) {
+// build blank puzzle grid
+document.querySelector('#generate-puzzle').addEventListener('click', function (e) {
+    clearGrid();
+    clearPuzzle();
+
+    const width = document.querySelector('#puzzle-width').value;
+    const height = document.querySelector('#puzzle-height').value;
+
+    generateGrid(`${width}x${height}`);
+});
+
+// build puzzle clues
+document.querySelector('#generate-clues').addEventListener('click', function (e) {
     clearPuzzle();
 
     // figure out a better solution to get the grid size
@@ -25,7 +36,7 @@ const generateGrid = function(size) {
     let colDepth = parseInt(depthArr.shift());
 
     grid.innerHTML = '';
-    grid.class = 'grid';
+    grid.className = 'grid';
     grid.classList.add(size);
     grid.style.width = `${rowDepth * 3 + .5}rem`;
     grid.style.gridTemplateColumns = `repeat(${rowDepth}, 3rem)`;
@@ -33,9 +44,10 @@ const generateGrid = function(size) {
     for(var i = 0; i < (rowDepth * colDepth); i++) {
         grid.innerHTML += '<div></div>';
     }
-}
 
-generateGrid('7x5');
+    document.querySelector('#grid').style.display = 'flex';
+    document.querySelector('#generate-button-wrapper').style.display = 'flex';
+}
 
 const buildPuzzle = function (size) {
     // build true/false array based on which squares are filled in
@@ -104,10 +116,19 @@ const buildPuzzle = function (size) {
 
     // add grid to ui
     document.querySelector('#clue-grid').append(clue);
+    document.querySelector('#clue-grid').style.display = 'flex';
 };
 
-// empties out the puzzle with clues
+// clears blank puzzle grid
+const clearGrid = function () {
+    document.querySelector('#grid').style.display = 'none';
+    document.querySelector('#generate-button-wrapper').style.display = 'none';
+    document.querySelector('#grid .grid').innerHTML = '';
+}
+
+// clears puzzle clue grid
 const clearPuzzle = function () {
+    document.querySelector('#clue-grid').style.display = 'none';
     document.querySelector('#clue-grid').innerHTML = '';
 }
 

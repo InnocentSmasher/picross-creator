@@ -7,15 +7,31 @@
 </head>
 <body>
 
-<section id="grid">
+<section id="puzzle-size" class="intro">
+    <div class="copy">
+        <h1>Picross Creator</h1>
+        <p>Enter a size, click "Generate Puzzle", and get drawing. Click a box to mark a square. Click it again to unmark it. When you're all finished, click "Generate Clues" to automatically add in the logic for the puzzle!</p>
+    </div>
+    <div class="input">
+        <label for="puzzle-width">Width</label>
+        <input id="puzzle-width" type="number">
+    </div>
+    <div class="input">
+        <label for="puzzle-height">Height</label>
+        <input id="puzzle-height" type="number">
+    </div>
+    <button id="generate-puzzle">Generate Puzzle</button>
+</section>
+
+<section id="grid" class="puzzle-grid" style="display: none;">
     <div class="grid"></div>
 </section>
 
-<section class="generate">
-    <button id="generate">Generate Puzzle</button>
+<section id="generate-button-wrapper" class="generate" style="display: none;">
+    <button id="generate-clues">Generate Clues</button>
 </section>
 
-<section id="clue-grid"></section>
+<section id="clue-grid" class="clue-grid" style="display: none;"></section>
 
 <script src="assets/js/app.js"></script>
 </body>
