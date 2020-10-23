@@ -1,7 +1,7 @@
 /* eslint-disable*/
 
 const grid = document.querySelector('#grid .grid');
-const modal = document.querySelector('.clue__background');
+const modal = document.querySelector('.modal__outer');
 const close = modal.querySelector('.close');
 
 // build blank puzzle grid
@@ -112,8 +112,8 @@ const buildPuzzle = function (size) {
 
     // add grid to ui
     document.querySelector('#clue-grid').append(clue);
+    modal.querySelector('h2').innerText = `Puzzle (${size})`;
     modal.classList.add('open');
-    // document.querySelector('#clue-grid').style.display = 'flex';
 };
 
 // clears blank puzzle grid
@@ -203,3 +203,9 @@ modal.addEventListener('click', function (e) {
 
 // close modal
 close.addEventListener('click', clearPuzzle);
+
+window.addEventListener('keyup', function (e) {
+    if (e.key === 'Escape' && modal.classList.contains('open')) {
+        clearPuzzle();
+    }
+});

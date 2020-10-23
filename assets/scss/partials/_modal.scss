@@ -1,4 +1,4 @@
-.clue__background {
+.modal__outer {
     z-index: 9999;
     position: fixed;
     top: 0;
@@ -20,7 +20,7 @@
     }
 }
 
-.clue__modal {
+.modal__inner {
     position: relative;
     background-color: #fff;
     border-radius: .125rem;

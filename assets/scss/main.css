@@ -141,7 +141,7 @@ button.close:hover, button.close:focus {
   padding: 0 0.25rem;
 }
 
-.clue__background {
+.modal__outer {
   z-index: 9999;
   position: fixed;
   top: 0;
@@ -157,12 +157,12 @@ button.close:hover, button.close:focus {
   transition: opacity 0.5s;
   padding: 2rem;
 }
-.clue__background.open {
+.modal__outer.open {
   opacity: 1;
   pointer-events: all;
 }
 
-.clue__modal {
+.modal__inner {
   position: relative;
   background-color: #fff;
   border-radius: 0.125rem;
@@ -173,18 +173,18 @@ button.close:hover, button.close:focus {
   grid-template-columns: 1fr auto;
   grid-gap: 1rem 2rem;
 }
-.clue__modal button.close {
+.modal__inner button.close {
   grid-area: close;
   align-self: center;
 }
-.clue__modal h2 {
+.modal__inner h2 {
   grid-area: title;
   margin-bottom: 0;
 }
-.clue__modal .clue-grid {
+.modal__inner .clue-grid {
   grid-area: puzzle;
 }
-.clue__modal .print {
+.modal__inner .print {
   grid-area: print;
   display: flex;
   justify-content: flex-end;
