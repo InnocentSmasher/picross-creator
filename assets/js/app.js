@@ -2,7 +2,9 @@
 
 const grid = document.querySelector('#grid .grid');
 const modal = document.querySelector('.modal__outer');
+const print = document.querySelector('#print-puzzle');
 const close = modal.querySelector('.close');
+let cleanGrid;
 
 // build blank puzzle grid
 document.querySelector('#generate-puzzle').addEventListener('click', function (e) {
@@ -40,6 +42,7 @@ const generateGrid = function(size) {
     for(var i = 0; i < (rowDepth * colDepth); i++) {
         grid.innerHTML += '<div></div>';
     }
+    cleanGrid = grid.cloneNode(true);
 
     document.querySelector('#grid').style.display = 'flex';
     document.querySelector('#generate-button-wrapper').style.display = 'flex';
@@ -96,7 +99,8 @@ const buildPuzzle = function (size) {
     // places the clue rows and columns on the grid
 
     // clones the drawn puzzle into the clue puzzle
-    var gridClone = grid.cloneNode(true);
+    console.log(cleanGrid, grid);
+    var gridClone = cleanGrid.cloneNode(true);
     gridClone.removeAttribute('id');
 
     // set up grid inside clue template
@@ -203,9 +207,13 @@ modal.addEventListener('click', function (e) {
 
 // close modal
 close.addEventListener('click', clearPuzzle);
-
 window.addEventListener('keyup', function (e) {
     if (e.key === 'Escape' && modal.classList.contains('open')) {
         clearPuzzle();
     }
 });
+
+// print puzzle
+print.addEventListener('click', function () {
+    window.print();
+})

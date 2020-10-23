@@ -189,3 +189,24 @@ button.close:hover, button.close:focus {
   display: flex;
   justify-content: flex-end;
 }
+
+@media print {
+  section {
+    display: none !important;
+  }
+
+  .modal__outer {
+    background-color: transparent;
+  }
+
+  .modal__inner {
+    box-shadow: none;
+  }
+  .modal__inner:after {
+    grid-area: print;
+    content: "Printed at picrosscreator.netlify.app";
+  }
+  .modal__inner > *:not(h2):not(.clue-grid) {
+    display: none;
+  }
+}

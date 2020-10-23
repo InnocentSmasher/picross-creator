@@ -1,0 +1,22 @@
+@media print {
+    section {
+        display: none !important;
+    }
+
+    .modal__outer {
+        background-color: transparent;
+    }
+
+    .modal__inner {
+        box-shadow: none;
+
+        &:after {
+            grid-area: print;
+            content: 'Printed at picrosscreator.netlify.app';
+        }
+
+        > *:not(h2):not(.clue-grid) {
+            display: none;
+        }
+    }
+}
