@@ -21,13 +21,18 @@ h1 {
     margin-bottom: .5rem;
     font-size: 1.5rem;
 }
+h2 {
+    margin-top: 0;
+    margin-bottom: .5rem;
+    font-size: 1.5rem;
+}
 p {
     margin-top: 0;
     margin-bottom: 1rem;
     font-size: 1rem;
     line-height: 1.4;
 }
-button {
+button:not(.close) {
     border: .25rem solid $primary;
     border-radius: .125rem;
     background-color: $white;
@@ -39,6 +44,38 @@ button {
     &:hover,
     &:focus {
         border-style: dashed;
+        outline: none;
+    }
+}
+
+button.close {box-sizing:content-box;
+    border: none;
+    border-radius: 0;
+    background-color: transparent;
+    color: $primary;
+    padding: 0;
+    font-size: 3rem;
+    line-height: .6;
+    transition: transform .2s;
+    height: 1.5rem;
+    width: 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    svg {
+        width: 100%;
+
+        path {
+            stroke: $primary;
+            fill: transparent;
+            stroke-width: 8;
+        }
+    }
+
+    &:hover,
+    &:focus {
+        transform: rotate(90deg);
         outline: none;
     }
 }

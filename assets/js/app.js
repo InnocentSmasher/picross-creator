@@ -1,12 +1,8 @@
 /* eslint-disable*/
 
 const grid = document.querySelector('#grid .grid');
-
-// add event listeners to all the squares
-grid.addEventListener('click', function (e) {
-    const square = e.target;
-    square.classList.toggle('fill');
-});
+const modal = document.querySelector('.clue__background');
+const close = modal.querySelector('.close');
 
 // build blank puzzle grid
 document.querySelector('#generate-puzzle').addEventListener('click', function (e) {
@@ -116,7 +112,8 @@ const buildPuzzle = function (size) {
 
     // add grid to ui
     document.querySelector('#clue-grid').append(clue);
-    document.querySelector('#clue-grid').style.display = 'flex';
+    modal.classList.add('open');
+    // document.querySelector('#clue-grid').style.display = 'flex';
 };
 
 // clears blank puzzle grid
@@ -128,7 +125,7 @@ const clearGrid = function () {
 
 // clears puzzle clue grid
 const clearPuzzle = function () {
-    document.querySelector('#clue-grid').style.display = 'none';
+    modal.classList.remove('open');
     document.querySelector('#clue-grid').innerHTML = '';
 }
 
@@ -192,3 +189,17 @@ const calculateClues = function (rowArr, i) {
 
     return html;
 }
+
+// add event listeners to all the squares
+grid.addEventListener('click', function (e) {
+    const square = e.target;
+    square.classList.toggle('fill');
+});
+
+// add event listeners to the modal
+modal.addEventListener('click', function (e) {
+
+})
+
+// close modal
+close.addEventListener('click', clearPuzzle);

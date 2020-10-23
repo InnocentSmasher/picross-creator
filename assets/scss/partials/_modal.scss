@@ -1,0 +1,54 @@
+.clue__background {
+    z-index: 9999;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgba(0,0,0,.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .5s;
+    padding: 2rem;
+
+    &.open {
+        opacity: 1;
+        pointer-events: all;
+    }
+}
+
+.clue__modal {
+    position: relative;
+    background-color: #fff;
+    border-radius: .125rem;
+    padding: 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,.5);
+
+    display: grid;
+    grid-template-areas: 'title close' 'puzzle puzzle' 'print print';
+    grid-template-columns: 1fr auto;
+    grid-gap: 1rem 2rem;
+
+    button.close {
+        grid-area: close;
+        align-self: center;
+    }
+
+    h2 {
+        grid-area: title;
+        margin-bottom: 0;
+    }
+
+    .clue-grid {
+        grid-area: puzzle;
+    }
+
+    .print {
+        grid-area: print;
+        display: flex;
+        justify-content: flex-end;
+    }
+}
