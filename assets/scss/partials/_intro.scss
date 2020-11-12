@@ -7,11 +7,12 @@
         margin-bottom: 1rem;
 
         label {
+            font-size: 1.125rem;
             margin-bottom: .25rem;
             text-align: left;
         }
         input {
-            font-size: 1rem;
+            font-size: 1.125rem;
             padding: .375rem .375rem;
             border: .25rem solid $black;
             border-radius: .125rem;
@@ -26,8 +27,4 @@
     button {
         align-self: center;
     }
-}
-
-.copy {
-
 }
