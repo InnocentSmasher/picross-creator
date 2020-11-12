@@ -1,4 +1,6 @@
 @media print {
+    $black: #000;
+
     section {
         display: none !important;
     }
@@ -11,11 +13,11 @@
         box-shadow: none;
 
         &:after {
-            grid-area: print;
             content: 'Printed at picrosscreator.netlify.app';
         }
 
-        > *:not(h2):not(.clue-grid) {
+        > *:not(.modal__header):not(.modal__body),
+        button {
             display: none;
         }
     }

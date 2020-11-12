@@ -1,96 +1,85 @@
 /* eslint-disable*/
 
-const grid = document.querySelector('#grid .grid');
+const drawGridWrapper = document.querySelector('#draw-grid');
+const drawGrid = drawGridWrapper.querySelector('.grid');
+const clueGrid = document.querySelector('#clue-grid');
 const modal = document.querySelector('.modal__outer');
-const print = document.querySelector('#print-puzzle');
-const close = modal.querySelector('.close');
-let cleanGrid;
+let blankGrid;
+
+// buttons
+const generatePuzzleBtn = document.querySelector('#generate-puzzle');
+const generateCluesBtn = document.querySelector('#generate-clues');
+const solutionBtn = document.querySelector('#view-solution');
+const printBtn = document.querySelector('#print-puzzle');
+const closeBtn = modal.querySelector('#close');
 
 // build blank puzzle grid
-document.querySelector('#generate-puzzle').addEventListener('click', function (e) {
+generatePuzzleBtn.addEventListener('click', function (e) {
     clearGrid();
-    clearPuzzle();
+    clearClueGrid();
 
-    const width = document.querySelector('#puzzle-width').value;
-    const height = document.querySelector('#puzzle-height').value;
+    // get width and height of puzzle
+    const columns = document.querySelector('#puzzle-width').value;
+    const rows = document.querySelector('#puzzle-height').value;
 
-    generateGrid(`${width}x${height}`);
+    // generate blank grid to start marking up
+    generateBlankGrid(columns, rows);
 });
 
 // build puzzle clues
-document.querySelector('#generate-clues').addEventListener('click', function (e) {
-    clearPuzzle();
-
-    // figure out a better solution to get the grid size
-    buildPuzzle(grid.classList[1]);
-
-    e.preventDefault();
+generateCluesBtn.addEventListener('click', function (e) {
+    clearClueGrid();
+    buildClueGrid(getGridColumns(), getGridRows());
 });
 
-const generateGrid = function(size) {
-    // determine first dimension length of row and column
-    let depthArr = size.split('x');
-    let rowDepth = parseInt(depthArr.shift());
-    let colDepth = parseInt(depthArr.shift());
-
-    grid.innerHTML = '';
-    grid.className = 'grid';
-    grid.classList.add(size);
-    grid.style.width = `${rowDepth * 3 + .5}rem`;
-    grid.style.gridTemplateColumns = `repeat(${rowDepth}, 3rem)`;
-    grid.style.gridTemplateRows = `repeat(${colDepth}, 3rem)`;
-    for(var i = 0; i < (rowDepth * colDepth); i++) {
-        grid.innerHTML += '<div></div>';
+function generateBlankGrid (columns, rows) {
+    drawGrid.innerHTML = '';
+    drawGrid.className = 'grid';
+    drawGrid.classList.add(`${columns}x${rows}`);
+    drawGrid.style.width = `${columns * 3 + .5}rem`;
+    drawGrid.style.gridTemplateColumns = `repeat(${columns}, 3rem)`;
+    drawGrid.style.gridTemplateRows = `repeat(${rows}, 3rem)`;
+    drawGrid.setAttribute('data-columns', columns);
+    drawGrid.setAttribute('data-rows', rows);
+    for(let i = 0; i < (columns * rows); i++) {
+        drawGrid.innerHTML += '<div></div>';
     }
-    cleanGrid = grid.cloneNode(true);
+    blankGrid = drawGrid;
 
-    document.querySelector('#grid').style.display = 'flex';
+    drawGridWrapper.style.display = 'flex';
     document.querySelector('#generate-button-wrapper').style.display = 'flex';
 }
 
-const buildPuzzle = function (size) {
+const buildClueGrid = function (columns, rows) {
     // build true/false array based on which squares are filled in
-    const puzzleArr = Array.from(document.querySelectorAll('#grid .grid div'));
+    const puzzle = Array.from(drawGrid.querySelectorAll('div'));
 
-    // determine first dimension length of row and column
-    let depthArr = size.split('x');
-    let rowDepth = parseInt(depthArr.shift());
-    let colDepth = parseInt(depthArr.shift());
-
-    // depth is rowDepth because array is being read from left to right
-    let depth = rowDepth;
+    // depth is columns because array is being read from left to right
+    const depth = columns;
 
     // initialize two dimensional arrays for rows and columns
-    // opposite rowDepth/colDepth are used since
-    // rowArr will have colDepth number of rows
-    // colArr will have rowDepth number of columns
+    // opposite columns/rows are used since
+    // puzzleByRow will have rows number of rows
+    // puzzleByColumn will have columns number of columns
     // example: you have a 10x5 grid (50 squares)
     // each row will have 10 squares, and there will be 5 rows
     // each column will have 5 squares, and there will be 10 columns
-    let rowArr = [];
-    for(let i = 0; i < colDepth; i++) {
-        rowArr[i] = [];
-    }
-    let colArr = [];
-    for(let i = 0; i < rowDepth; i++) {
-        colArr[i] = [];
-    }
+    let puzzleByRow = Array.from(Array(rows), () => Array(columns));
+    let puzzleByColumn = Array.from(Array(columns), () => Array(rows));
 
     // builds out the arrays based on rows and columns
-    for (let i = 0; i < puzzleArr.length; i++) {
+    for (let i = 0; i < puzzle.length; i++) {
         // determine static key being filled for each iteration
         let key = Math.floor(i / depth);
 
-        // rowArr is being written based on child array first ([0][0], [0][1], [0][2], etc)
-        rowArr[key][i - (key * depth)] = puzzleArr[i].classList.contains('fill');
-        // colArr is being written based on parent array first ([0][0], [1][0], [2][0], etc)
-        colArr[i - (key * depth)][key] = puzzleArr[i].classList.contains('fill');
+        // puzzleByRow is being written based on child array first ([0][0], [0][1], [0][2], etc)
+        puzzleByRow[key][i - (key * depth)] = puzzle[i].classList.contains('fill');
+        // puzzleByColumn is being written based on parent array first ([0][0], [1][0], [2][0], etc)
+        puzzleByColumn[i - (key * depth)][key] = puzzle[i].classList.contains('fill');
     }
 
-
-
     // creates html for clues
-    let clueHTML = buildClues(rowArr, colArr);
+    let clueHTML = buildClues(puzzleByRow, puzzleByColumn);
 
     // create div for the clue grid
     const clue = document.createElement('div');
@@ -99,121 +88,119 @@ const buildPuzzle = function (size) {
     // places the clue rows and columns on the grid
 
     // clones the drawn puzzle into the clue puzzle
-    console.log(cleanGrid, grid);
-    var gridClone = cleanGrid.cloneNode(true);
+    console.log(blankGrid, drawGrid);
+    var gridClone = blankGrid.cloneNode(true);
     gridClone.removeAttribute('id');
 
     // set up grid inside clue template
-    gridClone.style.gridColumn = `2 / span ${parseInt(rowDepth) + 2}`;
-    gridClone.style.gridRow = `2 / span ${colDepth + 2}`;
+    gridClone.style.gridColumn = `2 / span ${columns + 2}`;
+    gridClone.style.gridRow = `2 / span ${rows + 2}`;
 
     // set up grid for overall clue template
-    clue.style.gridTemplateColumns = `auto .25rem repeat(${rowDepth}, 3rem) .25rem`;
-    clue.style.gridTemplateRows = `auto .25rem repeat(${colDepth}, 3rem) .25rem`;
+    clue.style.gridTemplateColumns = `auto .25rem repeat(${columns}, 3rem) .25rem`;
+    clue.style.gridTemplateRows = `auto .25rem repeat(${rows}, 3rem) .25rem`;
 
     clue.innerHTML = clueHTML;
     clue.appendChild(gridClone);
 
     // add grid to ui
     document.querySelector('#clue-grid').append(clue);
-    modal.querySelector('h2').innerText = `Puzzle (${size})`;
+    modal.querySelector('h2').innerText = `Puzzle (${columns}x${rows})`;
     modal.classList.add('open');
 };
 
 // clears blank puzzle grid
 const clearGrid = function () {
-    document.querySelector('#grid').style.display = 'none';
+    drawGridWrapper.style.display = 'none';
     document.querySelector('#generate-button-wrapper').style.display = 'none';
-    document.querySelector('#grid .grid').innerHTML = '';
+    drawGrid.innerHTML = '';
 }
 
 // clears puzzle clue grid
-const clearPuzzle = function () {
-    modal.classList.remove('open');
-    document.querySelector('#clue-grid').innerHTML = '';
+const clearClueGrid = function () {
+    clueGrid.innerHTML = '';
 }
 
-const buildClues = function (rowArr, colArr) {
+const buildClues = function (puzzleByRow, puzzleByColumn) {
     let html = '';
 
-    for (let i = 0; i < rowArr.length; i++) {
-        html += `<span class="row" style="grid-column: 1; grid-row: ${i + 3};">` + calculateClues(rowArr, i) + `</span>`;
+    for (let i = 0; i < puzzleByRow.length; i++) {
+        html += `<span class="row" style="grid-column: 1; grid-row: ${i + 3};">` + calculateClues(puzzleByRow, i) + `</span>`;
     }
 
-    for (let i = 0; i < colArr.length; i++) {
-        html += `<span class="col" style="grid-column: ${i + 3}; grid-row: 1;">` + calculateClues(colArr, i) + `</span>`;
+    for (let i = 0; i < puzzleByColumn.length; i++) {
+        html += `<span class="col" style="grid-column: ${i + 3}; grid-row: 1;">` + calculateClues(puzzleByColumn, i) + `</span>`;
     }
 
     return html;
 }
 
 // calculates the clues one chunk at a time
-const calculateClues = function (rowArr, i) {
+function calculateClues (clues, i) {
     let html = '';
     let consecutiveSquares = 0;
 
-    // clueArr is clunky... figure out how to get rid of it
-    let clueArr = [];
-    for(let i = 0; i < rowArr.length; i++) {
-        clueArr[i] = [];
-    }
-
-    for (let j = 0; j < rowArr[i].length; j++) {
+    for (let j = 0; j < clues[i].length; j++) {
         // checks if value in nested array is true/false
-        // if true, add to the number of consecutive squares
-        // if false, check to see if there are any consecutive squares
-        if (rowArr[i][j]) {
-            // add to number of consecutive squares
+        if (clues[i][j]) {
+            // if true, add to number of consecutive squares
             consecutiveSquares++;
-        } else {
-            // check to see if there are any consecutive squares
-            // if there are, then push number of consecutive squares into clue array for that row/column
-            if (consecutiveSquares > 0) {
-                // push number of consecutive squares into clue array
-                clueArr[i].push(consecutiveSquares);
-                // display number of consecutive squares
-                html += `<span>${consecutiveSquares}</span>`;
-                // reset number of consecutive squares
-                consecutiveSquares = 0;
-            }
-        }
-        // if last iteration of array and there are any consecutive squares, push into clue array for row/column
-        if (j === rowArr[i].length - 1 && consecutiveSquares > 0) {
-            clueArr[i].push(consecutiveSquares);
-            // display number of consecutive squares
+        } else if (consecutiveSquares > 0) {
+            // if false, check to see if there are any consecutive squares
+            // add clue number to the html
             html += `<span>${consecutiveSquares}</span>`;
+
             // reset number of consecutive squares
             consecutiveSquares = 0;
         }
+        // checks if last iteration and if there are consecutive squares
+        if (j === clues[i].length - 1 && consecutiveSquares > 0) {
+            // if true, add clue number to html
+            html += `<span>${consecutiveSquares}</span>`;
+        }
     }
-    if (clueArr[i].length === 0) {
-        // display zero for row
-        html += `<span>${consecutiveSquares}</span>`;
+
+    // if the html is empty, there are no clues for the row
+    if (html === '') {
+        html += '<span>0</span>';
     }
 
     return html;
 }
 
+function getGridColumns () {
+    return parseInt(drawGrid.getAttribute('data-columns'));
+}
+
+function getGridRows () {
+    return parseInt(drawGrid.getAttribute('data-rows'));
+}
+
+function closeModal () {
+    modal.classList.remove('open');
+}
+
 // add event listeners to all the squares
-grid.addEventListener('click', function (e) {
+drawGrid.addEventListener('click', function (e) {
     const square = e.target;
     square.classList.toggle('fill');
 });
 
-// add event listeners to the modal
-modal.addEventListener('click', function (e) {
-
-})
-
 // close modal
-close.addEventListener('click', clearPuzzle);
+closeBtn.addEventListener('click', closeModal);
 window.addEventListener('keyup', function (e) {
     if (e.key === 'Escape' && modal.classList.contains('open')) {
-        clearPuzzle();
+        closeModal();
     }
 });
 
 // print puzzle
-print.addEventListener('click', function () {
+printBtn.addEventListener('click', function () {
     window.print();
 })
+
+// view solution
+solutionBtn.addEventListener('click', function () {
+    // copy initial grid
+    // replace blank grid with copy
+});

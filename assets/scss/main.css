@@ -169,25 +169,25 @@ button.close:hover, button.close:focus {
   padding: 1rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
   display: grid;
-  grid-template-areas: "title close" "puzzle puzzle" "print print";
-  grid-template-columns: 1fr auto;
-  grid-gap: 1rem 2rem;
+  grid-gap: 2rem;
 }
-.modal__inner button.close {
-  grid-area: close;
+.modal__inner .modal__header {
+  display: flex;
+  justify-content: space-between;
+}
+.modal__inner .modal__header h2 {
+  margin-bottom: 0;
+  margin-right: 2rem;
+}
+.modal__inner .modal__header .close {
   align-self: center;
 }
-.modal__inner h2 {
-  grid-area: title;
-  margin-bottom: 0;
-}
-.modal__inner .clue-grid {
-  grid-area: puzzle;
-}
-.modal__inner .print {
-  grid-area: print;
+.modal__inner .modal__footer {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+}
+.modal__inner .modal__footer button + button {
+  margin-left: 2rem;
 }
 
 @media print {
@@ -203,10 +203,10 @@ button.close:hover, button.close:focus {
     box-shadow: none;
   }
   .modal__inner:after {
-    grid-area: print;
     content: "Printed at picrosscreator.netlify.app";
   }
-  .modal__inner > *:not(h2):not(.clue-grid) {
+  .modal__inner > *:not(.modal__header):not(.modal__body),
+.modal__inner button {
     display: none;
   }
 }

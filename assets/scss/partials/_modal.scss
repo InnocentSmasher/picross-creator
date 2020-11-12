@@ -26,29 +26,29 @@
     border-radius: .125rem;
     padding: 1rem;
     box-shadow: 0 2px 8px rgba(0,0,0,.5);
-
     display: grid;
-    grid-template-areas: 'title close' 'puzzle puzzle' 'print print';
-    grid-template-columns: 1fr auto;
-    grid-gap: 1rem 2rem;
+    grid-gap: 2rem;
 
-    button.close {
-        grid-area: close;
-        align-self: center;
-    }
-
-    h2 {
-        grid-area: title;
-        margin-bottom: 0;
-    }
-
-    .clue-grid {
-        grid-area: puzzle;
-    }
-
-    .print {
-        grid-area: print;
+    .modal__header {
         display: flex;
-        justify-content: flex-end;
+        justify-content: space-between;
+
+        h2 {
+            margin-bottom: 0;
+            margin-right: 2rem;
+        }
+
+        .close {
+            align-self: center;
+        }
+    }
+
+    .modal__footer {
+        display: flex;
+        justify-content: space-between;
+
+        button + button {
+            margin-left: 2rem;
+        }
     }
 }

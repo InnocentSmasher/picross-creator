@@ -7,7 +7,7 @@ html {
 body {
     margin: 2rem;
     font-family: ui-sans-serif, system-ui, -system-ui, -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji";
-    color: $primary;
+    color: $black;
 }
 
 section {
@@ -33,10 +33,10 @@ p {
     line-height: 1.4;
 }
 button:not(.close) {
-    border: .25rem solid $primary;
+    border: .25rem solid $black;
     border-radius: .125rem;
     background-color: $white;
-    color: $primary;
+    color: $black;
     padding: .375rem .75rem;
     text-transform: uppercase;
     font-weight: 700;
@@ -52,7 +52,7 @@ button.close {box-sizing:content-box;
     border: none;
     border-radius: 0;
     background-color: transparent;
-    color: $primary;
+    color: $black;
     padding: 0;
     font-size: 3rem;
     line-height: .6;
@@ -67,7 +67,7 @@ button.close {box-sizing:content-box;
         width: 100%;
 
         path {
-            stroke: $primary;
+            stroke: $black;
             fill: transparent;
             stroke-width: 8;
         }

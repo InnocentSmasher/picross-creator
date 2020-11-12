@@ -1,17 +1,17 @@
 .grid {
-    background-color: $primary;
+    background-color: $black;
     display: grid;
     justify-content: center;
-    border: .25rem solid $primary;
+    border: .25rem solid $black;
     border-radius: .125rem;
 
     > div {
         background-color: $white;
         transition: background-color .05s ease-in-out;
-        border: .0625rem solid $primary;
+        border: .0625rem solid $black;
 
         &.fill {
-            background-color: $primary;
+            background-color: $black;
         }
     }
 }
