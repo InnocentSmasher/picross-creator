@@ -35,7 +35,6 @@ generateCluesBtn.addEventListener('click', function (e) {
 function generateBlankGrid (columns, rows) {
     drawGrid.innerHTML = '';
     drawGrid.className = 'grid';
-    drawGrid.classList.add(`${columns}x${rows}`);
     drawGrid.style.width = `${columns * 3 + .5}rem`;
     drawGrid.style.gridTemplateColumns = `repeat(${columns}, 3rem)`;
     drawGrid.style.gridTemplateRows = `repeat(${rows}, 3rem)`;
@@ -44,7 +43,9 @@ function generateBlankGrid (columns, rows) {
     for(let i = 0; i < (columns * rows); i++) {
         drawGrid.innerHTML += '<div></div>';
     }
-    blankGrid = drawGrid;
+
+    // generates a blank copy of this grid before drawing begins
+    blankGrid = drawGrid.cloneNode(true);
 
     drawGridWrapper.style.display = 'flex';
     document.querySelector('#generate-button-wrapper').style.display = 'flex';
@@ -87,21 +88,18 @@ const buildClueGrid = function (columns, rows) {
 
     // places the clue rows and columns on the grid
 
-    // clones the drawn puzzle into the clue puzzle
-    console.log(blankGrid, drawGrid);
-    var gridClone = blankGrid.cloneNode(true);
-    gridClone.removeAttribute('id');
+
 
     // set up grid inside clue template
-    gridClone.style.gridColumn = `2 / span ${columns + 2}`;
-    gridClone.style.gridRow = `2 / span ${rows + 2}`;
+    blankGrid.style.gridColumn = `2 / span ${columns + 2}`;
+    blankGrid.style.gridRow = `2 / span ${rows + 2}`;
 
     // set up grid for overall clue template
     clue.style.gridTemplateColumns = `auto .25rem repeat(${columns}, 3rem) .25rem`;
     clue.style.gridTemplateRows = `auto .25rem repeat(${rows}, 3rem) .25rem`;
 
     clue.innerHTML = clueHTML;
-    clue.appendChild(gridClone);
+    clue.appendChild(blankGrid);
 
     // add grid to ui
     document.querySelector('#clue-grid').append(clue);
@@ -201,6 +199,9 @@ printBtn.addEventListener('click', function () {
 
 // view solution
 solutionBtn.addEventListener('click', function () {
-    // copy initial grid
-    // replace blank grid with copy
+    // clone the drawn puzzle
+    let solutionGrid = drawGrid.cloneNode(true);
+
+    // replace blank grid with solution grid
+    clueGrid.querySelector('.grid').innerHTML = solutionGrid.innerHTML;
 });
