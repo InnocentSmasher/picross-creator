@@ -17,6 +17,11 @@
             border: .25rem solid $black;
             border-radius: .125rem;
 
+            &.error {
+                border-color: $red;
+                background: repeating-linear-gradient( -45deg, $transparent-red, $transparent-red .5rem, transparent .25rem, transparent 1.125rem );
+            }
+
             &:focus {
                 outline: none;
                 border-style: dotted;

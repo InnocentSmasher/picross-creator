@@ -15,15 +15,37 @@ const closeBtn = modal.querySelector('#close');
 
 // build blank puzzle grid
 generatePuzzleBtn.addEventListener('click', function (e) {
-    clearGrid();
-    clearClueGrid();
+    const inputs = document.querySelectorAll('.intro input');
 
     // get width and height of puzzle
     const columns = document.querySelector('#puzzle-width').value;
     const rows = document.querySelector('#puzzle-height').value;
 
-    // generate blank grid to start marking up
-    generateBlankGrid(columns, rows);
+    // check if fields are filled
+    if (verifyInput(columns) && verifyInput(rows)) {
+        // remove error classes, if any
+        inputs.forEach(function(input) {
+            if (input.classList.contains('error')) {
+                input.classList.remove('error');
+            }
+        })
+
+        clearGrid();
+        clearClueGrid();
+
+        // generate blank grid to start marking up
+        generateBlankGrid(columns, rows);
+    } else {
+        // add error classes to invalid inputs
+        inputs.forEach(function(input) {
+            if (!input.classList.contains('error') && !verifyInput(input.value)) {
+                input.classList.add('error');
+            } else if (input.classList.contains('error') && verifyInput(input.value)) {
+                input.classList.remove('error');
+            }
+        })
+    }
+
 });
 
 // build puzzle clues
@@ -176,6 +198,11 @@ function getGridRows () {
 
 function closeModal () {
     modal.classList.remove('open');
+}
+
+function verifyInput (input) {
+    input = parseInt(input);
+    return input > 0 && input <= 25;
 }
 
 // add event listeners to all the squares

@@ -106,6 +106,10 @@ button.close:hover, button.close:focus {
   border: 0.25rem solid #333132;
   border-radius: 0.125rem;
 }
+.intro .input input.error {
+  border-color: #e3242b;
+  background: repeating-linear-gradient(-45deg, #e3242b40, #e3242b40 0.5rem, transparent 0.25rem, transparent 1.125rem);
+}
 .intro .input input:focus {
   outline: none;
   border-style: dotted;
