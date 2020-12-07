@@ -1,22 +1,74 @@
 @media print {
     $black: #000;
 
+    html {
+        font-size: 12px;
+    }
+
+    body {
+        margin: 0;
+        color: $black;
+    }
+
     section {
         display: none !important;
     }
 
     .modal__outer {
+        padding: 0;
         background-color: transparent;
     }
 
     .modal__inner {
-        box-shadow: none;
+        grid-template-areas: 'puzzle puzzle' 'title source';
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: auto min-content;
 
-        &:after {
-            content: 'Printed at picrosscreator.netlify.app';
+        box-shadow: none;
+        height: 100vh;
+        width: 100vw;
+        padding: 0;
+
+        .modal__header {
+            grid-area: title;
+
+            h2 {
+                font-size: 1.5rem;
+            }
         }
 
-        > *:not(.modal__header):not(.modal__body),
+        .modal__body {
+            grid-area: puzzle;
+            display: flex;
+            justify-content: flex-end;
+            align-items: flex-end;
+
+            .grid {
+                background-color: $black;
+                border-color: $black;
+
+                > div {
+                    border-width: 1px;
+                    border-color: $black;
+                }
+            }
+        }
+
+        .modal__footer {
+            position: relative;
+            grid-area: source;
+
+            &:after {
+                content: 'Printed at picrosscreator.netlify.app';
+                position: absolute;
+                top: 50%;
+                right: 0;
+                transform: translateY(-50%);
+                color: $black;
+            }
+        }
+
+        > *:not(.modal__header):not(.modal__body):not(.modal__footer),
         button {
             display: none;
         }

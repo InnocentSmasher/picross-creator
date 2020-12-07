@@ -203,21 +203,66 @@ button.close:hover, button.close:focus {
 }
 
 @media print {
+  html {
+    font-size: 12px;
+  }
+
+  body {
+    margin: 0;
+    color: #000;
+  }
+
   section {
     display: none !important;
   }
 
   .modal__outer {
+    padding: 0;
     background-color: transparent;
   }
 
   .modal__inner {
+    grid-template-areas: "puzzle puzzle" "title source";
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: auto min-content;
     box-shadow: none;
+    height: 100vh;
+    width: 100vw;
+    padding: 0;
   }
-  .modal__inner:after {
+  .modal__inner .modal__header {
+    grid-area: title;
+  }
+  .modal__inner .modal__header h2 {
+    font-size: 1.5rem;
+  }
+  .modal__inner .modal__body {
+    grid-area: puzzle;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+  }
+  .modal__inner .modal__body .grid {
+    background-color: #000;
+    border-color: #000;
+  }
+  .modal__inner .modal__body .grid > div {
+    border-width: 1px;
+    border-color: #000;
+  }
+  .modal__inner .modal__footer {
+    position: relative;
+    grid-area: source;
+  }
+  .modal__inner .modal__footer:after {
     content: "Printed at picrosscreator.netlify.app";
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    color: #000;
   }
-  .modal__inner > *:not(.modal__header):not(.modal__body),
+  .modal__inner > *:not(.modal__header):not(.modal__body):not(.modal__footer),
 .modal__inner button {
     display: none;
   }
