@@ -2,19 +2,25 @@
 
 const drawGridWrapper = document.querySelector('#draw-grid');
 const drawGrid = drawGridWrapper.querySelector('.grid');
-const clueGrid = document.querySelector('#clue-grid');
-const modal = document.querySelector('.modal__outer');
 let blankGrid;
+
+// modal constants
+const modal = document.querySelector('.modal__outer');
+const clueGrid = modal.querySelector('#clue-grid');
+const solutionGrid = modal.querySelector('#solution-grid');
 
 // buttons
 const generatePuzzleBtn = document.querySelector('#generate-puzzle');
 const generateCluesBtn = document.querySelector('#generate-clues');
-const solutionBtn = document.querySelector('#view-solution');
-const printBtn = document.querySelector('#print-puzzle');
+const solutionBtn = modal.querySelector('#view-solution');
+const printBtn = modal.querySelector('#print-puzzle');
 const closeBtn = modal.querySelector('#close');
 
 // build blank puzzle grid
-generatePuzzleBtn.addEventListener('click', function (e) {
+generatePuzzleBtn.addEventListener('click', generateBlankPuzzle);
+
+// generate blank puzzle
+function generateBlankPuzzle() {
     const inputs = document.querySelectorAll('.intro input');
 
     // get width and height of puzzle
@@ -30,8 +36,7 @@ generatePuzzleBtn.addEventListener('click', function (e) {
             }
         })
 
-        clearGrid();
-        clearClueGrid();
+        clearAllGrids();
 
         // generate blank grid to start marking up
         generateBlankGrid(columns, rows);
@@ -45,8 +50,7 @@ generatePuzzleBtn.addEventListener('click', function (e) {
             }
         })
     }
-
-});
+}
 
 // build puzzle clues
 generateCluesBtn.addEventListener('click', function (e) {
@@ -108,10 +112,6 @@ const buildClueGrid = function (columns, rows) {
     const clue = document.createElement('div');
     clue.classList.add('clue');
 
-    // places the clue rows and columns on the grid
-
-
-
     // set up grid inside clue template
     blankGrid.style.gridColumn = `2 / span ${columns + 2}`;
     blankGrid.style.gridRow = `2 / span ${rows + 2}`;
@@ -123,11 +123,20 @@ const buildClueGrid = function (columns, rows) {
     clue.innerHTML = clueHTML;
     clue.appendChild(blankGrid);
 
-    // add grid to ui
-    document.querySelector('#clue-grid').append(clue);
+    // update modal title
     modal.querySelector('h2').innerText = `Puzzle (${columns}x${rows})`;
-    modal.classList.add('open');
+
+    // add grids to modal
+    clueGrid.append(clue);
+    solutionGrid.append(drawGrid.cloneNode(true));
+
+    openModal();
 };
+
+function clearAllGrids() {
+    clearGrid();
+    clearClueGrid();
+}
 
 // clears blank puzzle grid
 const clearGrid = function () {
@@ -197,7 +206,64 @@ function getGridRows () {
 }
 
 function closeModal () {
+    if (!modal.classList.contains('open')) {
+        console.info('Already closed.');
+        return;
+    }
+
     modal.classList.remove('open');
+
+    // remove event listeners
+    printBtn.removeEventListener('click', printPuzzle);
+    closeBtn.removeEventListener('click', closeModal);
+    window.removeEventListener('keyup', handleKeyUp);
+    solutionBtn.removeEventListener('click', toggleSolution);
+}
+
+function openModal() {
+    if (modal.classList.contains('open')) {
+        console.info('Already open.');
+        return;
+    }
+
+    // make sure solution grid is hidden
+    if (!solutionGrid.classList.contains('hide')) {
+        solutionGrid.classList.add('hide');
+    }
+
+    modal.classList.add('open');
+
+    // add event listeners
+    printBtn.addEventListener('click', printPuzzle);
+    closeBtn.addEventListener('click', closeModal);
+    window.addEventListener('keyup', handleKeyUp);
+    solutionBtn.addEventListener('click', toggleSolution);
+}
+
+function handleKeyUp(e) {
+    if (e.key === 'Escape') {
+        return closeModal();
+    }
+}
+
+function printPuzzle() {
+    window.print();
+}
+
+function toggleSolution() {
+    if (solutionGrid.classList.contains('hide')) {
+        if (solutionBtn.innerText !== 'Hide Solution') {
+            solutionBtn.innerText = 'Hide Solution';
+        }
+        solutionGrid.classList.remove('hide');
+        clueGrid.classList.add('hide');
+    } else {
+        if (solutionBtn.innerText !== 'View Solution') {
+            solutionBtn.innerText = 'View Solution';
+        }
+        solutionGrid.classList.add('hide');
+        clueGrid.classList.remove('hide');
+    }
 }
 
 function verifyInput (input) {
@@ -209,26 +275,4 @@ function verifyInput (input) {
 drawGrid.addEventListener('click', function (e) {
     const square = e.target;
     square.classList.toggle('fill');
-});
-
-// close modal
-closeBtn.addEventListener('click', closeModal);
-window.addEventListener('keyup', function (e) {
-    if (e.key === 'Escape' && modal.classList.contains('open')) {
-        closeModal();
-    }
-});
-
-// print puzzle
-printBtn.addEventListener('click', function () {
-    window.print();
-})
-
-// view solution
-solutionBtn.addEventListener('click', function () {
-    // clone the drawn puzzle
-    let solutionGrid = drawGrid.cloneNode(true);
-
-    // replace blank grid with solution grid
-    clueGrid.querySelector('.grid').innerHTML = solutionGrid.innerHTML;
 });

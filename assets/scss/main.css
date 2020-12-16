@@ -13,7 +13,7 @@ body {
 }
 
 section {
-  max-width: 768px;
+  max-width: 48rem;
   margin: 0 auto 2rem;
   display: flex;
   justify-content: center;
@@ -85,6 +85,10 @@ button.close svg path {
 }
 button.close:hover, button.close:focus {
   transform: rotate(90deg);
+}
+
+.hide {
+  display: none;
 }
 
 .intro {
