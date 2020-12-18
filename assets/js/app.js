@@ -124,7 +124,7 @@ const buildClueGrid = function (columns, rows) {
     clue.appendChild(blankGrid);
 
     // update modal title
-    modal.querySelector('h2').innerText = `Puzzle (${columns}x${rows})`;
+    modal.querySelector('h2').textContent = `Puzzle (${columns}x${rows})`;
 
     // add grids to modal
     clueGrid.append(clue);
@@ -252,14 +252,14 @@ function printPuzzle() {
 
 function toggleSolution() {
     if (solutionGrid.classList.contains('hide')) {
-        if (solutionBtn.innerText !== 'Hide Solution') {
-            solutionBtn.innerText = 'Hide Solution';
+        if (solutionBtn.textContent !== 'Hide Solution') {
+            solutionBtn.textContent = 'Hide Solution';
         }
         solutionGrid.classList.remove('hide');
         clueGrid.classList.add('hide');
     } else {
-        if (solutionBtn.innerText !== 'View Solution') {
-            solutionBtn.innerText = 'View Solution';
+        if (solutionBtn.textContent !== 'View Solution') {
+            solutionBtn.textContent = 'View Solution';
         }
         solutionGrid.classList.add('hide');
         clueGrid.classList.remove('hide');
