@@ -2,7 +2,8 @@
 
 const drawGridWrapper = document.querySelector('#draw-grid');
 const drawGrid = drawGridWrapper.querySelector('.grid');
-let blankGrid;
+let clueSubGrid;
+let solutionSubGrid;
 
 // modal constants
 const modal = document.querySelector('.modal__outer');
@@ -31,23 +32,23 @@ function generateBlankPuzzle() {
     if (verifyInput(columns) && verifyInput(rows)) {
         // remove error classes, if any
         inputs.forEach(function(input) {
-            if (input.classList.contains('error')) {
-                input.classList.remove('error');
-            }
-        })
+            input.classList.remove('error');
+        });
 
         clearAllGrids();
 
-        // generate blank grid to start marking up
-        generateBlankGrid(columns, rows);
+        // generate blank grid for drawing
+        generateDrawGrid(columns, rows);
+
+        // generates a blank copy of this grid before drawing begins
+        generateClueSubGrid();
+
+        // show draw grid and set up event listeners
+        initializeDrawGrid();
     } else {
         // add error classes to invalid inputs
         inputs.forEach(function(input) {
-            if (!input.classList.contains('error') && !verifyInput(input.value)) {
-                input.classList.add('error');
-            } else if (input.classList.contains('error') && verifyInput(input.value)) {
-                input.classList.remove('error');
-            }
+            !verifyInput(input.value) ? input.classList.add('error') : input.classList.remove('error');
         })
     }
 }
@@ -55,29 +56,48 @@ function generateBlankPuzzle() {
 // build puzzle clues
 generateCluesBtn.addEventListener('click', function (e) {
     clearClueGrid();
-    buildClueGrid(getGridColumns(), getGridRows());
+    generateSolutionSubGrid();
+    generateClueHTML(getGridColumns(), getGridRows());
 });
 
-function generateBlankGrid (columns, rows) {
-    drawGrid.innerHTML = '';
-    drawGrid.className = 'grid';
+function generateDrawGrid (columns, rows) {
+    drawGrid.classList.add('grid');
     drawGrid.style.width = `${columns * 3 + .5}rem`;
     drawGrid.style.gridTemplateColumns = `repeat(${columns}, 3rem)`;
     drawGrid.style.gridTemplateRows = `repeat(${rows}, 3rem)`;
     drawGrid.setAttribute('data-columns', columns);
     drawGrid.setAttribute('data-rows', rows);
+
+    // pushing into array then joining in one innerHTML step is WAY faster
+    let html = [];
     for(let i = 0; i < (columns * rows); i++) {
-        drawGrid.innerHTML += '<div></div>';
+        html.push('<div></div>');
     }
-
-    // generates a blank copy of this grid before drawing begins
-    blankGrid = drawGrid.cloneNode(true);
-
-    drawGridWrapper.style.display = 'flex';
-    document.querySelector('#generate-button-wrapper').style.display = 'flex';
+    drawGrid.innerHTML = html.join('');
 }
 
-const buildClueGrid = function (columns, rows) {
+function initializeDrawGrid() {
+    // show draw grid
+    drawGridWrapper.style.display = 'flex';
+    document.querySelector('#generate-button-wrapper').style.display = 'flex';
+
+    // add event listeners to all the squares
+    drawGrid.addEventListener('click', function (e) {
+        if (e.target !== drawGrid) {
+            e.target.classList.toggle('fill');
+        }
+    });
+}
+
+function generateClueSubGrid() {
+    clueSubGrid = drawGrid.cloneNode(true);
+}
+
+function generateSolutionSubGrid() {
+    solutionSubGrid = drawGrid.cloneNode(true);
+}
+
+function generateClueHTML(columns, rows) {
     // build true/false array based on which squares are filled in
     const puzzle = Array.from(drawGrid.querySelectorAll('div'));
 
@@ -105,37 +125,53 @@ const buildClueGrid = function (columns, rows) {
         puzzleByColumn[i - (key * depth)][key] = puzzle[i].classList.contains('fill');
     }
 
-    // creates html for clues
-    let clueHTML = buildClues(puzzleByRow, puzzleByColumn);
-
     // create div for the clue grid
-    const clue = document.createElement('div');
-    clue.classList.add('clue');
-
-    // set up grid inside clue template
-    blankGrid.style.gridColumn = `2 / span ${columns + 2}`;
-    blankGrid.style.gridRow = `2 / span ${rows + 2}`;
+    const clueHTML = document.createElement('div');
+    clueHTML.classList.add('clue');
 
     // set up grid for overall clue template
-    clue.style.gridTemplateColumns = `auto .25rem repeat(${columns}, 3rem) .25rem`;
-    clue.style.gridTemplateRows = `auto .25rem repeat(${rows}, 3rem) .25rem`;
-
-    clue.innerHTML = clueHTML;
-    clue.appendChild(blankGrid);
+    clueHTML.style.gridTemplateColumns = `auto .25rem repeat(${columns}, 3rem) .25rem`;
+    clueHTML.style.gridTemplateRows = `auto .25rem repeat(${rows}, 3rem) .25rem`;
+    clueHTML.innerHTML = buildClues(puzzleByRow, puzzleByColumn);
 
     // update modal title
     modal.querySelector('h2').textContent = `Puzzle (${columns}x${rows})`;
 
+    // set up grid inside clue template
+    clueSubGrid.style.gridColumn = `2 / span ${columns + 2}`;
+    clueSubGrid.style.gridRow = `2 / span ${rows + 2}`;
+
+    // prepare sub grids
+    placeSubGrids(columns, rows);
+
     // add grids to modal
-    clueGrid.append(clue);
-    solutionGrid.append(drawGrid.cloneNode(true));
+    buildClueGrid(clueHTML);
+    buildSolutionGrid(clueHTML.cloneNode(true), columns, rows);
 
     openModal();
-};
+}
+
+function placeSubGrids(columns, rows) {
+    clueSubGrid.style.gridColumn = `2 / span ${columns + 2}`;
+    clueSubGrid.style.gridRow = `2 / span ${rows + 2}`;
+    solutionSubGrid.style.gridColumn = `2 / span ${columns + 2}`;
+    solutionSubGrid.style.gridRow = `2 / span ${rows + 2}`;
+}
+
+function buildClueGrid(clueHTML) {
+    clueHTML.appendChild(clueSubGrid);
+    clueGrid.append(clueHTML);
+}
+
+function buildSolutionGrid(solutionHTML, columns, rows) {
+    solutionGrid.append(solutionHTML);
+    solutionGrid.querySelector('.clue').append(solutionSubGrid);
+}
 
 function clearAllGrids() {
     clearGrid();
     clearClueGrid();
+    clearSolutionGrid();
 }
 
 // clears blank puzzle grid
@@ -148,6 +184,10 @@ const clearGrid = function () {
 // clears puzzle clue grid
 const clearClueGrid = function () {
     clueGrid.innerHTML = '';
+}
+
+function clearSolutionGrid() {
+    solutionGrid.innerHTML = '';
 }
 
 const buildClues = function (puzzleByRow, puzzleByColumn) {
@@ -205,12 +245,31 @@ function getGridRows () {
     return parseInt(drawGrid.getAttribute('data-rows'));
 }
 
+function openModal() {
+    if (modal.classList.contains('open')) {
+        console.info('Already open.');
+        return;
+    }
+
+    solutionGrid.classList.add('hide');
+
+    // add event listeners
+    printBtn.addEventListener('click', printPuzzle);
+    closeBtn.addEventListener('click', closeModal);
+    window.addEventListener('keyup', handleKeyUp);
+    solutionBtn.addEventListener('click', toggleSolution);
+
+    // show modal after adding interactivity
+    modal.classList.add('open');
+}
+
 function closeModal () {
     if (!modal.classList.contains('open')) {
         console.info('Already closed.');
         return;
     }
 
+    // hide modal before remove interactivity
     modal.classList.remove('open');
 
     // remove event listeners
@@ -218,26 +277,6 @@ function closeModal () {
     closeBtn.removeEventListener('click', closeModal);
     window.removeEventListener('keyup', handleKeyUp);
     solutionBtn.removeEventListener('click', toggleSolution);
-}
-
-function openModal() {
-    if (modal.classList.contains('open')) {
-        console.info('Already open.');
-        return;
-    }
-
-    // make sure solution grid is hidden
-    if (!solutionGrid.classList.contains('hide')) {
-        solutionGrid.classList.add('hide');
-    }
-
-    modal.classList.add('open');
-
-    // add event listeners
-    printBtn.addEventListener('click', printPuzzle);
-    closeBtn.addEventListener('click', closeModal);
-    window.addEventListener('keyup', handleKeyUp);
-    solutionBtn.addEventListener('click', toggleSolution);
 }
 
 function handleKeyUp(e) {
@@ -251,28 +290,11 @@ function printPuzzle() {
 }
 
 function toggleSolution() {
-    if (solutionGrid.classList.contains('hide')) {
-        if (solutionBtn.textContent !== 'Hide Solution') {
-            solutionBtn.textContent = 'Hide Solution';
-        }
-        solutionGrid.classList.remove('hide');
-        clueGrid.classList.add('hide');
-    } else {
-        if (solutionBtn.textContent !== 'View Solution') {
-            solutionBtn.textContent = 'View Solution';
-        }
-        solutionGrid.classList.add('hide');
-        clueGrid.classList.remove('hide');
-    }
+    solutionGrid.classList.contains('hide') ? solutionBtn.textContent = 'Hide Solution' : solutionBtn.textContent = 'View Solution';
+    solutionGrid.classList.toggle('hide');
+    clueGrid.classList.toggle('hide');
 }
 
 function verifyInput (input) {
-    input = parseInt(input);
-    return input > 0 && input <= 25;
+    return parseInt(input) > 0 && parseInt(input) <= 25;
 }
-
-// add event listeners to all the squares
-drawGrid.addEventListener('click', function (e) {
-    const square = e.target;
-    square.classList.toggle('fill');
-});
