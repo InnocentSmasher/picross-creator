@@ -43,6 +43,12 @@
         }
     }
 
+    .modal__body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
     .modal__footer {
         display: flex;
         justify-content: space-between;

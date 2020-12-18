@@ -198,6 +198,11 @@ button.close:hover, button.close:focus {
 .modal__inner .modal__header .close {
   align-self: center;
 }
+.modal__inner .modal__body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .modal__inner .modal__footer {
   display: flex;
   justify-content: space-between;
