@@ -1,27 +1,28 @@
 /* eslint-disable*/
 
+// draw variables
 const drawGridWrapper = document.querySelector('#draw-grid');
 const drawGrid = drawGridWrapper.querySelector('.grid');
+const generateCluesBtn = document.querySelector('#generate-clues');
 let clueSubGrid;
 let solutionSubGrid;
 
-// modal constants
+// modal variables
 const modal = document.querySelector('.modal__outer');
 const clueGrid = modal.querySelector('#clue-grid');
 const solutionGrid = modal.querySelector('#solution-grid');
-
-// buttons
-const generatePuzzleBtn = document.querySelector('#generate-puzzle');
-const generateCluesBtn = document.querySelector('#generate-clues');
 const solutionBtn = modal.querySelector('#view-solution');
 const printBtn = modal.querySelector('#print-puzzle');
 const closeBtn = modal.querySelector('#close');
 
 // build blank puzzle grid
-generatePuzzleBtn.addEventListener('click', generateBlankPuzzle);
+// don't need to make variable here because #generate-puzzle is only used once
+document.querySelector('#generate-puzzle').addEventListener('click', generateBlankPuzzle);
 
 // generate blank puzzle
 function generateBlankPuzzle() {
+    // todo: refactor inputs and columns/rows into the same variable
+    // get inputs
     const inputs = document.querySelectorAll('.intro input');
 
     // get width and height of puzzle
@@ -53,22 +54,18 @@ function generateBlankPuzzle() {
     }
 }
 
-// build puzzle clues
-generateCluesBtn.addEventListener('click', function (e) {
-    clearClueGrid();
-    generateSolutionSubGrid();
-    generateClueHTML(getGridColumns(), getGridRows());
-});
-
 function generateDrawGrid (columns, rows) {
+    // add css to draw grid
     drawGrid.classList.add('grid');
     drawGrid.style.width = `${columns * 3 + .5}rem`;
     drawGrid.style.gridTemplateColumns = `repeat(${columns}, 3rem)`;
     drawGrid.style.gridTemplateRows = `repeat(${rows}, 3rem)`;
+
+    // using data-* allows me to query for the rows/columns at any time
     drawGrid.setAttribute('data-columns', columns);
     drawGrid.setAttribute('data-rows', rows);
 
-    // pushing into array then joining in one innerHTML step is WAY faster
+    // pushing into array then using join instead of using innerHTML concatenation step is WAY faster
     let html = [];
     for(let i = 0; i < (columns * rows); i++) {
         html.push('<div></div>');
@@ -79,15 +76,22 @@ function generateDrawGrid (columns, rows) {
 function initializeDrawGrid() {
     // show draw grid
     drawGridWrapper.style.display = 'flex';
-    document.querySelector('#generate-button-wrapper').style.display = 'flex';
-
-    // add event listeners to all the squares
-    drawGrid.addEventListener('click', function (e) {
-        if (e.target !== drawGrid) {
-            e.target.classList.toggle('fill');
-        }
-    });
 }
+
+// set up event listeners for drawing grid
+// button to generate clues
+generateCluesBtn.addEventListener('click', function() {
+    clearClueGrid();
+    clearSolutionGrid();
+    generateSolutionSubGrid();
+    generateClueHTML(getGridColumns(), getGridRows());
+});
+// add event listener to drawing grid to toggle fill state in squares
+drawGrid.addEventListener('click', function (e) {
+    if (e.target !== drawGrid) {
+        e.target.classList.toggle('fill');
+    }
+});
 
 function generateClueSubGrid() {
     clueSubGrid = drawGrid.cloneNode(true);
@@ -169,6 +173,7 @@ function buildSolutionGrid(solutionHTML, columns, rows) {
 }
 
 function clearAllGrids() {
+    // clear the grids
     clearGrid();
     clearClueGrid();
     clearSolutionGrid();
@@ -177,7 +182,6 @@ function clearAllGrids() {
 // clears blank puzzle grid
 const clearGrid = function () {
     drawGridWrapper.style.display = 'none';
-    document.querySelector('#generate-button-wrapper').style.display = 'none';
     drawGrid.innerHTML = '';
 }
 
@@ -247,7 +251,6 @@ function getGridRows () {
 
 function openModal() {
     if (modal.classList.contains('open')) {
-        console.info('Already open.');
         return;
     }
 
@@ -265,7 +268,6 @@ function openModal() {
 
 function closeModal () {
     if (!modal.classList.contains('open')) {
-        console.info('Already closed.');
         return;
     }
 
