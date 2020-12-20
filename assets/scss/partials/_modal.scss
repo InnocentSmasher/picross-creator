@@ -53,6 +53,10 @@
         display: flex;
         justify-content: space-between;
 
+        button:first-of-type {
+            min-width: 10.1875rem;
+        }
+
         button + button {
             margin-left: 2rem;
         }

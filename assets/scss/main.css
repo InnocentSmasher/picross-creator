@@ -14,9 +14,18 @@ body {
 
 section {
   max-width: 48rem;
-  margin: 0 auto 2rem;
+  margin: 0 auto 4rem;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+}
+section:last-of-type {
+  margin-bottom: 0;
+}
+section.draw-grid {
+  align-items: center;
+}
+section.draw-grid button {
+  margin-top: 1rem;
 }
 
 h1 {
@@ -55,6 +64,7 @@ button:not(.close) {
   font-size: 1rem;
   font-weight: 700;
   letter-spacing: 0.0125em;
+  text-align: right;
 }
 button:not(.close):hover, button:not(.close):focus {
   border-style: dashed;
@@ -206,6 +216,9 @@ button.close:hover, button.close:focus {
 .modal__inner .modal__footer {
   display: flex;
   justify-content: space-between;
+}
+.modal__inner .modal__footer button:first-of-type {
+  min-width: 10.1875rem;
 }
 .modal__inner .modal__footer button + button {
   margin-left: 2rem;

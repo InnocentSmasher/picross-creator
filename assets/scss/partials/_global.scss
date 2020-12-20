@@ -12,9 +12,21 @@ body {
 
 section {
     max-width: 48rem;
-    margin: 0 auto 2rem;
+    margin: 0 auto 4rem;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+
+    &:last-of-type {
+        margin-bottom: 0;
+    }
+
+    &.draw-grid {
+        align-items: center;
+
+        button {
+            margin-top: 1rem;
+        }
+    }
 }
 h1 {
     margin-top: 0;
@@ -50,6 +62,8 @@ button:not(.close) {
     font-size: 1rem;
     font-weight: 700;
     letter-spacing: .0125em;
+    text-align: right;
+
     &:hover,
     &:focus {
         border-style: dashed;
