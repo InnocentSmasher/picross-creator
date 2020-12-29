@@ -18,6 +18,12 @@
         opacity: 1;
         pointer-events: all;
     }
+
+    &.modal--help {
+        .modal__inner {
+            max-width: 32rem;
+        }
+    }
 }
 
 .modal__inner {

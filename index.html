@@ -7,32 +7,39 @@
 </head>
 <body>
 
-<section id="puzzle-size" class="intro">
-    <div class="copy">
+<div class="container">
+    <header>
         <h1>Picross Creator</h1>
-        <p>Enter a size, click "Generate Puzzle", and get drawing. Click a box to mark a square. Click it again to unmark it. When you're all finished, click "Generate Clues" to automatically add in the logic for the puzzle!</p>
-    </div>
-    <div class="input">
-        <label for="puzzle-width">Width</label>
-        <input id="puzzle-width" type="number">
-    </div>
-    <div class="input">
-        <label for="puzzle-height">Height</label>
-        <input id="puzzle-height" type="number">
-    </div>
-    <button id="generate-puzzle">Generate Puzzle</button>
-</section>
+        <button id="help" class="help" aria-label="Display instructions, opens modal">?</button>
+    </header>
+    <main>
+        <section id="puzzle-size" class="intro">
+            <div class="input">
+                <label for="puzzle-width">Width</label>
+                <input id="puzzle-width" type="number">
+            </div>
+            <div class="input">
+                <label for="puzzle-height">Height</label>
+                <input id="puzzle-height" type="number">
+            </div>
+            <button id="generate-puzzle" class="button">Generate Puzzle</button>
+        </section>
 
-<section id="draw-grid" class="draw-grid" style="display: none">
-    <div class="grid"></div>
-    <button id="generate-clues">Generate Clues</button>
-</section>
+        <section id="draw-grid" class="draw-grid" style="display: none">
+            <div class="grid"></div>
+            <button id="generate-clues" class="button">Generate Clues</button>
+        </section>
+    </main>
+    <footer>
+        Made with 💀 by <a href="https://chuckhutchins.com/">Chuck Hutchins</a>.
+    </footer>
+</div>
 
-<div class="modal__outer">
+<div class="modal__outer modal--puzzle">
     <div class="modal__inner">
         <div class="modal__header">
             <h2>Picross Puzzle</h2>
-            <button id="close" class="close" aria-label="Close">
+            <button class="close" aria-label="Close modal">
                 <svg viewbox="0 0 32 32">
                     <path d="M 3,3 L 29,29 M 29,3 L 3,29" />
                 </svg>
@@ -43,9 +50,26 @@
             <div id="solution-grid" class="solution-grid"></div>
         </div>
         <div class="modal__footer">
-            <button id="view-solution">View Solution</button>
-            <button id="print-puzzle">Print</button>
+            <button id="view-solution" class="button">View Solution</button>
+            <button id="print-puzzle" class="button">Print</button>
         </div>
+    </div>
+</div>
+
+<div class="modal__outer modal--help">
+    <div class="modal__inner">
+        <div class="modal__header">
+            <h2>Instructions</h2>
+            <button class="close" aria-label="Close modal">
+                <svg viewbox="0 0 32 32">
+                    <path d="M 3,3 L 29,29 M 29,3 L 3,29" />
+                </svg>
+            </button>
+        </div>
+        <div class="modal__body">
+            <p>Enter a size, click "Generate Puzzle", and get drawing. Click a box to mark a square. Click it again to unmark it. When you're all finished, click "Generate Clues" to automatically add in the logic for the puzzle!</p>
+        </div>
+<!--        <div class="modal__footer"></div>-->
     </div>
 </div>
 

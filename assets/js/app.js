@@ -8,12 +8,16 @@ let clueSubGrid;
 let solutionSubGrid;
 
 // modal variables
-const modal = document.querySelector('.modal__outer');
+const modal = document.querySelector('.modal--puzzle');
 const clueGrid = modal.querySelector('#clue-grid');
 const solutionGrid = modal.querySelector('#solution-grid');
 const solutionBtn = modal.querySelector('#view-solution');
 const printBtn = modal.querySelector('#print-puzzle');
-const closeBtn = modal.querySelector('#close');
+const closeBtn = modal.querySelector('.close');
+
+// help modal
+const helpModal = document.querySelector('.modal--help');
+const helpCloseBtn = helpModal.querySelector('.close');
 
 // build blank puzzle grid
 // don't need to make variable here because #generate-puzzle is only used once
@@ -249,7 +253,36 @@ function getGridRows () {
     return parseInt(drawGrid.getAttribute('data-rows'));
 }
 
-function openModal() {
+document.querySelector('#help').addEventListener('click', openHelpModal);
+
+function openHelpModal() {
+    if (helpModal.classList.contains('open')) {
+        return;
+    }
+
+    // add event listeners
+    helpCloseBtn.addEventListener('click', closeHelpModal);
+    window.addEventListener('keyup', handleKeyUp);
+
+    // show modal after adding interactivity
+    helpModal.classList.add('open');
+}
+
+function closeHelpModal() {
+    if (!helpModal.classList.contains('open')) {
+        return;
+    }
+
+    // hide modal before removing interactivity
+    helpModal.classList.remove('open');
+
+    // remove event listeners
+    helpCloseBtn.removeEventListener('click', closeHelpModal);
+    window.removeEventListener('keyup', handleKeyUp);
+}
+
+function openModal(e) {
+    console.log(e);
     if (modal.classList.contains('open')) {
         return;
     }
@@ -258,9 +291,9 @@ function openModal() {
 
     // add event listeners
     printBtn.addEventListener('click', printPuzzle);
+    solutionBtn.addEventListener('click', toggleSolution);
     closeBtn.addEventListener('click', closeModal);
     window.addEventListener('keyup', handleKeyUp);
-    solutionBtn.addEventListener('click', toggleSolution);
 
     // show modal after adding interactivity
     modal.classList.add('open');
@@ -283,7 +316,12 @@ function closeModal () {
 
 function handleKeyUp(e) {
     if (e.key === 'Escape') {
-        return closeModal();
+        if (modal.classList.contains('open')) {
+            return closeModal();
+        } else if (helpModal.classList.contains('open')) {
+            return closeHelpModal();
+        }
+
     }
 }
 
